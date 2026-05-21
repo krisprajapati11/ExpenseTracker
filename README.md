@@ -105,4 +105,4 @@ npm run dev
 
 # Author
 
-Kris Prajapati
+Krish Prajapati

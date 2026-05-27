@@ -23,7 +23,6 @@ public class BudgetService : IBudgetService
         {
             Id = Guid.NewGuid(),
             UserId = userId,
-            CategoryId = request.CategoryId,
             LimitAmount = request.LimitAmount,
             Month = request.Month,
             Year = request.Year
@@ -36,9 +35,15 @@ public class BudgetService : IBudgetService
         return new BudgetResponseDto
         {
             Id = budget.Id,
-            CategoryId = budget.CategoryId,
+
             LimitAmount = budget.LimitAmount,
+
+            SpentAmount = 0,
+
+            RemainingAmount = budget.LimitAmount,
+
             Month = budget.Month,
+
             Year = budget.Year
         };
     }
@@ -51,11 +56,59 @@ public class BudgetService : IBudgetService
             .Select(x => new BudgetResponseDto
             {
                 Id = x.Id,
-                CategoryId = x.CategoryId,
+
                 LimitAmount = x.LimitAmount,
+
+                SpentAmount = _context.Expenses
+        .Where(e =>
+            e.UserId == userId &&
+            e.Date.Month == x.Month &&
+            e.Date.Year == x.Year
+        )
+        .Sum(e => (decimal?)e.Amount) ?? 0,
+
+                RemainingAmount =
+        x.LimitAmount -
+        (
+            _context.Expenses
+            .Where(e =>
+                e.UserId == userId &&
+                e.Date.Month == x.Month &&
+                e.Date.Year == x.Year
+            )
+            .Sum(e => (decimal?)e.Amount) ?? 0
+        ),
+
                 Month = x.Month,
+
                 Year = x.Year
-            })
-            .ToListAsync();
+            }).ToListAsync();
+    }
+
+    public async Task<bool>
+    DeleteBudgetAsync(
+        Guid budgetId,
+        Guid userId)
+    {
+        var budget =
+            await _context.Budgets
+                .FirstOrDefaultAsync(x =>
+                    x.Id == budgetId &&
+                    x.UserId == userId
+                );
+
+        if (budget == null)
+        {
+            return false;
+        }
+
+        _context.Budgets.Remove(
+            budget
+        );
+
+        await _context
+            .SaveChangesAsync();
+
+        return true;
     }
 }

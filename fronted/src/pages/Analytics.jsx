@@ -3,27 +3,35 @@ import {
   ArcElement,
   Tooltip,
   Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
 } from "chart.js";
 
-import { Pie } from "react-chartjs-2";
+import { Pie, Bar } from "react-chartjs-2";
 
 import { useEffect, useState } from "react";
 
 import DashboardLayout from "../layouts/DashboardLayout";
 
 import {
-  getCategoryAnalytics,
+  getCategoryAnalytics, getMonthlyAnalytics
 } from "../services/analyticsService";
 
 ChartJS.register(
   ArcElement,
   Tooltip,
-  Legend
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement
 );
 
 function Analytics() {
 
   const [analytics, setAnalytics] = useState([]);
+  const [monthlyAnalytics, setMonthlyAnalytics] = useState([]);
+
 
   useEffect(() => {
 
@@ -44,6 +52,9 @@ function Analytics() {
 
       console.log(error);
     }
+
+    const monthlyData = await getMonthlyAnalytics();
+    setMonthlyAnalytics(monthlyData);
   };
 
   const chartData = {
@@ -73,6 +84,25 @@ function Analytics() {
     ],
   };
 
+  const barData = {
+
+    labels: monthlyAnalytics.map(
+      (item) => item.month
+    ),
+
+    datasets: [
+      {
+        label: "Monthly Expenses",
+
+        data: monthlyAnalytics.map(
+          (item) => item.total
+        ),
+
+        backgroundColor: "#3b82f6",
+      },
+    ],
+  };
+
   return (
     <DashboardLayout>
 
@@ -80,11 +110,27 @@ function Analytics() {
         Analytics
       </h1>
 
-      <div className="bg-white p-6 rounded-2xl shadow">
+      <div className="bg-white p-6 rounded-2xl shadow ">
 
-        <Pie data={chartData} />
+        <div className="w-[400px] mx-auto">
+
+          <Pie data={chartData} />
+
+        </div>
+
+        <div className="bg-white p-6 rounded-2xl shadow mt-10">
+
+          <h2 className="text-2xl font-bold mb-6">
+            Monthly Expenses
+          </h2>
+
+          <Bar data={barData} />
+
+        </div>
 
       </div>
+
+
 
     </DashboardLayout>
   );

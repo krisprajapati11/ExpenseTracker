@@ -4,9 +4,20 @@ namespace ExpenseTracker.Application.Interfaces;
 
 public interface IBudgetService
 {
-    Task<BudgetResponseDto> CreateBudgetAsync(
+    Task<BudgetResponseDto>
+    CreateBudgetAsync(
         Guid userId,
-        CreateBudgetDto request);
+        CreateBudgetDto request
+    );
 
-    Task<List<BudgetResponseDto>> GetBudgetsAsync(Guid userId);
+    Task<List<BudgetResponseDto>>
+    GetBudgetsAsync(
+        Guid userId
+    );
+
+    Task<bool>
+    DeleteBudgetAsync(
+        Guid budgetId,
+        Guid userId
+    );
 }

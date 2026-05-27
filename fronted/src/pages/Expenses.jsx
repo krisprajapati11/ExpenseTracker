@@ -3,9 +3,9 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import {
   getExpenses,
   addExpense,
+  deleteExpense,
   getCategories,
   createCategory,
-  deleteExpense,
   updateExpense,
 } from "../services/expenseService";
 
@@ -56,6 +56,10 @@ function Expenses() {
       console.log(error);
     }
   };
+
+
+
+
 
   const handleAddExpense = async (e) => {
 
@@ -129,6 +133,14 @@ function Expenses() {
   };
 
   const handleDeleteExpense = async (expenseId) => {
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this expense?"
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
 
     try {
 
@@ -226,7 +238,9 @@ function Expenses() {
           type="submit"
           className="bg-black text-white px-6 py-3 rounded-lg mt-4"
         >
-          Add Expense
+          {editingExpenseId
+            ? "Update Expense"
+            : "Add Expense"}
         </button>
 
       </form>
@@ -248,6 +262,9 @@ function Expenses() {
 
               <th className="text-left p-3">Category</th>
 
+              <th className="p-3">
+                Actions
+              </th>
             </tr>
 
           </thead>
@@ -272,20 +289,27 @@ function Expenses() {
 
                 <td className="p-3">
 
-                  <button
-                    onClick={() => handleDeleteExpense(expense.id)}
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg"
-                  >
-                    Delete
+                  <div className="flex gap-2 justify-center">
 
+                    <button
+                      onClick={() =>
+                        handleEditExpense(expense)
+                      }
+                      className="bg-blue-500 text-white px-3 py-1 rounded"
+                    >
+                      Edit
+                    </button>
 
-                  </button>
-                  <button
-                    onClick={() => handleEditExpense(expense)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2 ml-5"
-                  >
-                    Edit
-                  </button>
+                    <button
+                      onClick={() =>
+                        handleDeleteExpense(expense.id)
+                      }
+                      className="bg-red-500 text-white px-3 py-1 rounded"
+                    >
+                      Delete
+                    </button>
+
+                  </div>
 
                 </td>
 

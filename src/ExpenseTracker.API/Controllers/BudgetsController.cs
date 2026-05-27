@@ -2,7 +2,6 @@
 using ExpenseTracker.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace ExpenseTracker.API.Controllers;
 
@@ -11,37 +10,72 @@ namespace ExpenseTracker.API.Controllers;
 [Authorize]
 public class BudgetsController : ControllerBase
 {
-    private readonly IBudgetService _budgetService;
+    private readonly IBudgetService
+        _budgetService;
 
     public BudgetsController(
         IBudgetService budgetService)
     {
-        _budgetService = budgetService;
+        _budgetService =
+            budgetService;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateBudget(
+    public async Task<IActionResult>
+    CreateBudget(
         CreateBudgetDto request)
     {
-        var userId = User.FindFirstValue(
-            ClaimTypes.NameIdentifier);
+        var userId = Guid.Parse(
+            User.FindFirst("id")!.Value
+        );
 
-        var result = await _budgetService.CreateBudgetAsync(
-            Guid.Parse(userId!),
-            request);
+        var result =
+            await _budgetService
+                .CreateBudgetAsync(
+                    userId,
+                    request
+                );
 
         return Ok(result);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetBudgets()
+    public async Task<IActionResult>
+    GetBudgets()
     {
-        var userId = User.FindFirstValue(
-            ClaimTypes.NameIdentifier);
+        var userId = Guid.Parse(
+            User.FindFirst("id")!.Value
+        );
 
-        var result = await _budgetService.GetBudgetsAsync(
-            Guid.Parse(userId!));
+        var result =
+            await _budgetService
+                .GetBudgetsAsync(
+                    userId
+                );
 
         return Ok(result);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult>
+    DeleteBudget(Guid id)
+    {
+        var userId = Guid.Parse(
+            User.FindFirst("id")!.Value
+        );
+
+        var result =
+            await _budgetService
+                .DeleteBudgetAsync(
+                    id,
+                    userId
+                );
+
+        if (!result)
+        {
+            return BadRequest();
+        }
+
+        return Ok();
     }
 }

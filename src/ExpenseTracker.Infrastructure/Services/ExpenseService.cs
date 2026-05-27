@@ -46,11 +46,13 @@ public class ExpenseService : IExpenseService
     public async Task<List<ExpenseResponseDto>> GetExpensesAsync(Guid userId)
     {
         return await _context.Expenses
+             .Include(x => x.Category)
             .Where(x => x.UserId == userId)
             .Select(x => new ExpenseResponseDto
             {
                 Id = x.Id,
                 CategoryId = x.CategoryId,
+                CategoryName = x.Category.Name,
                 Amount = x.Amount,
                 Description = x.Description,
                 Date = x.Date

@@ -2,6 +2,7 @@
 using ExpenseTracker.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ExpenseTracker.API.Controllers;
 
@@ -10,72 +11,54 @@ namespace ExpenseTracker.API.Controllers;
 [Authorize]
 public class BudgetsController : ControllerBase
 {
-    private readonly IBudgetService
-        _budgetService;
+    private readonly IBudgetService _budgetService;
 
-    public BudgetsController(
-        IBudgetService budgetService)
+    public BudgetsController(IBudgetService budgetService)
     {
-        _budgetService =
-            budgetService;
+        _budgetService = budgetService;
     }
 
     [HttpPost]
-    public async Task<IActionResult>
-    CreateBudget(
-        CreateBudgetDto request)
+    public async Task<IActionResult> CreateBudget(CreateBudgetDto request)
     {
-        var userId = Guid.Parse(
-            User.FindFirst("id")!.Value
-        );
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
 
-        var result =
-            await _budgetService
-                .CreateBudgetAsync(
-                    userId,
-                    request
-                );
-
+        var result = await _budgetService.CreateBudgetAsync(Guid.Parse(userId), request);
         return Ok(result);
     }
 
     [HttpGet]
-    public async Task<IActionResult>
-    GetBudgets()
+    public async Task<IActionResult> GetBudgets()
     {
-        var userId = Guid.Parse(
-            User.FindFirst("id")!.Value
-        );
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
 
-        var result =
-            await _budgetService
-                .GetBudgetsAsync(
-                    userId
-                );
-
+        var result = await _budgetService.GetBudgetsAsync(Guid.Parse(userId));
         return Ok(result);
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult>
-    DeleteBudget(Guid id)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateBudget(Guid id, UpdateBudgetDto request)
     {
-        var userId = Guid.Parse(
-            User.FindFirst("id")!.Value
-        );
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
 
-        var result =
-            await _budgetService
-                .DeleteBudgetAsync(
-                    id,
-                    userId
-                );
+        var updated = await _budgetService.UpdateBudgetAsync(id, Guid.Parse(userId), request);
+        if (!updated) return NotFound("Budget not found");
 
-        if (!result)
-        {
-            return BadRequest();
-        }
+        return Ok("Budget updated successfully");
+    }
 
-        return Ok();
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteBudget(Guid id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+
+        var result = await _budgetService.DeleteBudgetAsync(id, Guid.Parse(userId));
+        if (!result) return NotFound("Budget not found");
+
+        return Ok("Budget deleted successfully");
     }
 }

@@ -77,7 +77,7 @@ builder.Services.AddCors(options =>
 });
 var app = builder.Build();
 
-app.    ("AllowFrontend");
+app.UseCors("AllowFrontend");
 
 
 app.UseHttpsRedirection();

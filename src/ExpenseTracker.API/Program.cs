@@ -69,14 +69,15 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173")
+            policy.WithOrigins("http://localhost:5173",
+             "https://expensetracker-fronted-i811.onrender.com")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
 });
 var app = builder.Build();
 
-app.UseCors("AllowFrontend");
+app.    ("AllowFrontend");
 
 
 app.UseHttpsRedirection();

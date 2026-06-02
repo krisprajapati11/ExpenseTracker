@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5035/api",
+  baseURL: "https://expensetracker-2-fiaf.onrender.com/api",
 });
 
 export default api;

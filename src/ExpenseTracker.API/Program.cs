@@ -12,9 +12,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using ExpenseTracker.API.Middleware;
 
 
-
 var builder = WebApplication.CreateBuilder(args);
-
 
 // Database
 
@@ -64,23 +62,34 @@ builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
 
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowFrontend",
+//        policy =>
+//        {
+//            policy.WithOrigins(
+//             "https://expensetracker-fronted-i811.onrender.com")
+//                  .AllowAnyHeader()
+//                  .AllowAnyMethod();
+//        });
+//});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins(
-             "https://expensetracker-fronted-i811.onrender.com")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
+            policy
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
         });
 });
 var app = builder.Build();
 
-app.UseCors("AllowFrontend");
-
-
 app.UseHttpsRedirection();
+
+app.UseCors("AllowFrontend");
 
 app.UseMiddleware<ExceptionMiddleware>();
 

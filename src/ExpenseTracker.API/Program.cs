@@ -69,7 +69,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173",
+            policy.WithOrigins(
              "https://expensetracker-fronted-i811.onrender.com")
                   .AllowAnyHeader()
                   .AllowAnyMethod();

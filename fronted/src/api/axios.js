@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://expensetracker-1-2xwd.onrender.com/api",
+  baseURL: "https://richly-stoning-dioxide.ngrok-free.dev/api",
 });
 
 export default api;

@@ -17,8 +17,7 @@ function Budgets() {
       const data = await getBudgets();
       setBudgets(data);
     } catch (error) {
-      console.log(error);
-      alert("Failed to fetch budgets");
+      console.log("Failed to fetch budgets:", error);
     }
   };
 
@@ -29,14 +28,11 @@ function Budgets() {
   };
 
   const handleDeleteBudget = async (budgetId) => {
-    if (!window.confirm("Are you sure you want to delete this budget?")) return;
     try {
       await deleteBudget(budgetId);
-      alert("Budget Deleted");
       fetchBudgets();
     } catch (error) {
-      console.log(error);
-      alert("Delete Failed");
+      console.log("Delete Failed:", error);
     }
   };
 
@@ -52,10 +48,8 @@ function Budgets() {
 
       if (editingBudgetId) {
         await updateBudget(editingBudgetId, budgetData);
-        alert("Budget Updated");
       } else {
         await addBudget(budgetData);
-        alert("Budget Added");
       }
 
       setAmount("");
@@ -63,8 +57,7 @@ function Budgets() {
       setEditingBudgetId(null);
       fetchBudgets();
     } catch (error) {
-      console.log(error);
-      alert("Failed to save budget");
+      console.log("Failed to save budget:", error);
     }
   };
 

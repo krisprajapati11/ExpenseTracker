@@ -4,6 +4,7 @@ import { loginUser } from "../services/authService";
 
 function Login() {
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
     email: "",
@@ -19,17 +20,16 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
 
     try {
       const result = await loginUser(formData);
 
       localStorage.setItem("token", result.token);
 
-      alert("Login Successful 🚀");
-
       navigate("/dashboard");
-    } catch (error) {
-      alert("Invalid Email or Password");
+    } catch (err) {
+      setError("Invalid Email or Password");
     }
   };
 
@@ -44,6 +44,12 @@ function Login() {
         <h1 className="text-3xl font-bold text-center mb-6">
           Expense Tracker
         </h1>
+
+        {error && (
+          <div className="bg-rose-50 border border-rose-200 text-rose-800 text-sm p-3 rounded-lg mb-4 text-center">
+            {error}
+          </div>
+        )}
 
         <input
           type="email"

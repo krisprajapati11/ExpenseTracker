@@ -4,6 +4,7 @@ import { registerUser } from "../services/authService";
 
 function Register() {
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -20,15 +21,14 @@ function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setError("");
 
     try {
       await registerUser(formData);
 
-      alert("Registration Successful 🚀");
-
       navigate("/");
-    } catch (error) {
-      alert("Registration Failed");
+    } catch (err) {
+      setError("Registration Failed. Please try again.");
     }
   };
 
@@ -43,6 +43,12 @@ function Register() {
         <h1 className="text-3xl font-bold text-center mb-6">
           Create Account
         </h1>
+
+        {error && (
+          <div className="bg-rose-50 border border-rose-200 text-rose-800 text-sm p-3 rounded-lg mb-4 text-center">
+            {error}
+          </div>
+        )}
 
         <input
           type="text"

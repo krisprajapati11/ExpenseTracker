@@ -21,8 +21,7 @@ function Expenses() {
       const data = await getExpenses();
       setExpenses(data);
     } catch (error) {
-      console.log(error);
-      alert("Failed to fetch expenses");
+      console.log("Failed to fetch expenses:", error);
     }
   };
 
@@ -41,7 +40,7 @@ function Expenses() {
       let finalCategoryId = categoryId;
 
       if (categoryId === "other") {
-        if (!customCategory.trim()) { alert("Please enter a category name"); return; }
+        if (!customCategory.trim()) return;
         const newCategory = await createCategory(customCategory);
         finalCategoryId = newCategory.id;
         fetchCategories();
@@ -49,17 +48,14 @@ function Expenses() {
 
       if (editingExpenseId) {
         await updateExpense(editingExpenseId, { categoryId: finalCategoryId, amount: Number(amount), description, date: new Date() });
-        alert("Expense Updated");
       } else {
         await addExpense({ categoryId: finalCategoryId, amount: Number(amount), description, date: new Date() });
-        alert("Expense Added");
       }
 
       fetchExpenses();
       setDescription(""); setAmount(""); setCategoryId(""); setCustomCategory(""); setEditingExpenseId(null);
     } catch (error) {
-      console.log(error);
-      alert("Failed to save expense");
+      console.log("Failed to save expense:", error);
     }
   };
 
@@ -76,14 +72,11 @@ function Expenses() {
   };
 
   const handleDeleteExpense = async (expenseId) => {
-    if (!window.confirm("Are you sure you want to delete this expense?")) return;
     try {
       await deleteExpense(expenseId);
-      alert("Expense Deleted");
       fetchExpenses();
     } catch (error) {
-      console.log(error);
-      alert("Failed to delete expense");
+      console.log("Failed to delete expense:", error);
     }
   };
 

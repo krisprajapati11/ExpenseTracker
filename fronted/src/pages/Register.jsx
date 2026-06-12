@@ -26,7 +26,7 @@ function Register() {
     try {
       await registerUser(formData);
 
-      navigate("/");
+      navigate("/", { state: { message: "Registration Successful 🚀 Please log in." } });
     } catch (err) {
       setError("Registration Failed. Please try again.");
     }

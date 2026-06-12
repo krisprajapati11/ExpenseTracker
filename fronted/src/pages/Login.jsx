@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { loginUser } from "../services/authService";
 
 function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [error, setError] = useState("");
+  const successMessage = location.state?.message;
 
   const [formData, setFormData] = useState({
     email: "",
@@ -21,6 +23,9 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+
+    // Clear navigation state so message disappears on manual reload/retry
+    window.history.replaceState({}, document.title);
 
     try {
       const result = await loginUser(formData);
@@ -44,6 +49,12 @@ function Login() {
         <h1 className="text-3xl font-bold text-center mb-6">
           Expense Tracker
         </h1>
+
+        {successMessage && !error && (
+          <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm p-3 rounded-lg mb-4 text-center">
+            {successMessage}
+          </div>
+        )}
 
         {error && (
           <div className="bg-rose-50 border border-rose-200 text-rose-800 text-sm p-3 rounded-lg mb-4 text-center">

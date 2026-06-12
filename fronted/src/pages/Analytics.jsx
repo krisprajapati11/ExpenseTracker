@@ -105,33 +105,25 @@ function Analytics() {
 
   return (
     <DashboardLayout>
+      <h1 className="text-3xl font-bold mb-8">Analytics</h1>
 
-      <h1 className="text-3xl font-bold mb-8">
-        Analytics
-      </h1>
-
-      <div className="bg-white p-6 rounded-2xl shadow ">
-
-        <div className="w-[400px] mx-auto">
-
-          <Pie data={chartData} />
-
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Pie Chart Card */}
+        <div className="bg-white p-6 rounded-2xl shadow flex flex-col items-center">
+          <h2 className="text-2xl font-bold mb-6 self-start text-gray-800">Expense Distribution</h2>
+          <div className="w-full max-w-[320px] md:max-w-[360px] flex items-center justify-center">
+            <Pie data={chartData} />
+          </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl shadow mt-10">
-
-          <h2 className="text-2xl font-bold mb-6">
-            Monthly Expenses
-          </h2>
-
-          <Bar data={barData} />
-
+        {/* Bar Chart Card */}
+        <div className="bg-white p-6 rounded-2xl shadow">
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">Monthly Expenses</h2>
+          <div className="w-full">
+            <Bar data={barData} />
+          </div>
         </div>
-
       </div>
-
-
-
     </DashboardLayout>
   );
 }

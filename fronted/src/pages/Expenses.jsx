@@ -110,34 +110,36 @@ function Expenses() {
       </form>
 
       <div className="bg-white rounded-2xl shadow p-6">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b">
-              <th className="text-left p-3">Title</th>
-              <th className="text-left p-3">Amount</th>
-              <th className="text-left p-3">Category</th>
-              <th className="text-center p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {expenses.map((expense) => (
-              <tr key={expense.id} className="border-b hover:bg-gray-50">
-                <td className="p-3">{expense.description}</td>
-                <td className="p-3">₹{expense.amount}</td>
-                <td className="p-3">{expense.categoryName}</td>
-                <td className="p-3">
-                  <div className="flex gap-2 justify-center">
-                    <button onClick={() => handleEditExpense(expense)} className="bg-blue-500 text-white px-3 py-1 rounded">Edit</button>
-                    <button onClick={() => handleDeleteExpense(expense.id)} className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-                  </div>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[600px]">
+            <thead>
+              <tr className="border-b">
+                <th className="text-left p-3">Title</th>
+                <th className="text-left p-3">Amount</th>
+                <th className="text-left p-3">Category</th>
+                <th className="text-center p-3">Actions</th>
               </tr>
-            ))}
-            {expenses.length === 0 && (
-              <tr><td colSpan="4" className="p-6 text-center text-gray-400">No expenses yet. Add one above.</td></tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {expenses.map((expense) => (
+                <tr key={expense.id} className="border-b hover:bg-gray-50">
+                  <td className="p-3">{expense.description}</td>
+                  <td className="p-3">₹{expense.amount}</td>
+                  <td className="p-3">{expense.categoryName}</td>
+                  <td className="p-3">
+                    <div className="flex gap-2 justify-center">
+                      <button onClick={() => handleEditExpense(expense)} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition-colors">Edit</button>
+                      <button onClick={() => handleDeleteExpense(expense.id)} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition-colors">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {expenses.length === 0 && (
+                <tr><td colSpan="4" className="p-6 text-center text-gray-400">No expenses yet. Add one above.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </DashboardLayout>
   );

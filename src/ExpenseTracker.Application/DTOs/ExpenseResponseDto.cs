@@ -18,5 +18,5 @@ namespace ExpenseTracker.Application.DTOs
 
         public DateTime Date { get; set; }
     }
-}
+}   
         
